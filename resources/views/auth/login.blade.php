@@ -18,7 +18,6 @@
 <div class="card" style="width: 420px;">
     <div class="card-header">
         <h5 class="mb-1">🎓 Scholarship Allocation Engine</h5>
-        <small class="opacity-75">University Lab Project</small>
     </div>
     <div class="card-body p-4">
 
@@ -41,10 +40,10 @@
                        name="username"
                        class="form-control @error('username') is-invalid @enderror"
                        value="{{ old('username') }}"
-                       placeholder="admin  or  2207026"
+                       placeholder="Enter your User ID"
                        autofocus
                        autocomplete="username">
-                <div class="hint">Admin: <strong>admin</strong> &nbsp;|&nbsp; Student: roll number e.g. <strong>2207026</strong></div>
+                <!-- <div class="hint">Admin: <strong>admin</strong> &nbsp;|&nbsp; Student: roll number e.g. <strong>2207026</strong></div> -->
                 @error('username')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -57,7 +56,7 @@
                        id="password"
                        name="password"
                        class="form-control @error('password') is-invalid @enderror"
-                       placeholder="Default: 123"
+                       placeholder="Enter your password"
                        autocomplete="current-password">
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -66,11 +65,6 @@
 
             <button type="submit" class="btn btn-primary w-100">Sign In</button>
         </form>
-
-        <hr class="my-3">
-        <p class="text-center mb-0 small text-muted">
-            New user? <a href="{{ route('register') }}">Register here</a>
-        </p>
     </div>
 </div>
 </body>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\ScholarshipController;
+use App\Http\Controllers\Admin\StudentManagementController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
 // ── Admin routes ──────────────────────────────────────────────
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+
+    Route::get('students', [StudentManagementController::class, 'index'])->name('students.index');
 
     Route::get('scholarships/create', [ScholarshipController::class, 'create'])
         ->name('scholarships.create');

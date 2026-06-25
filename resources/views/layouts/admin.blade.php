@@ -67,6 +67,10 @@
            class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <i class="bi bi-speedometer2"></i>Dashboard
         </a>
+        <a href="{{ route('admin.students.index') }}"
+           class="nav-link {{ request()->routeIs('admin.students*') ? 'active' : '' }}">
+            <i class="bi bi-people"></i>Students
+        </a>
         <a href="{{ route('admin.scholarships.index') }}"
            class="nav-link {{ request()->routeIs('admin.scholarships*') ? 'active' : '' }}">
             <i class="bi bi-award"></i>Scholarships
