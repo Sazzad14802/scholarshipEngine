@@ -84,7 +84,7 @@
                     <label class="form-label fw-semibold">Application Required <span class="text-danger">*</span></label>
                     <select name="application_required" class="form-select" required>
                         <option value="1" {{ old('application_required', 1) == 1 ? 'selected' : '' }}>Yes — Students Apply</option>
-                        <option value="0" {{ old('application_required') == '0' ? 'selected' : '' }}>No — Auto Allocated</option>
+                        <option value="0" {{ old('application_required') == '0' ? 'selected' : '' }}>No — No Application Required</option>
                     </select>
                 </div>
                 <div class="col-md-6">

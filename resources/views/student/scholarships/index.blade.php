@@ -14,7 +14,7 @@
 {{-- Info note --}}
 <div class="alert alert-info d-flex align-items-center py-2 mb-4" style="border-radius:10px;font-size:.85rem;">
     <i class="bi bi-info-circle-fill me-2 text-primary"></i>
-    Only scholarships you are fully eligible for (based on department, CGPA, income, and gender) are shown here. Scholarships marked <strong class="mx-1">Auto</strong> are allocated automatically — no application needed.
+    Only scholarships you are fully eligible for (based on department, CGPA, income, and gender) are shown here. Scholarships marked <strong class="mx-1">No App</strong> require no application.
 </div>
 
 {{-- Card grid --}}
@@ -30,7 +30,7 @@
                         @if($s->application_required)
                             <span class="badge badge-yes ms-2 flex-shrink-0" style="font-size:.7rem;">Apply</span>
                         @else
-                            <span class="badge badge-auto ms-2 flex-shrink-0" style="font-size:.7rem;">Auto</span>
+                            <span class="badge badge-auto ms-2 flex-shrink-0" style="font-size:.7rem;">No App</span>
                         @endif
                     </div>
 
@@ -78,7 +78,7 @@
                             @endif
                         @else
                             <div class="text-center" style="font-size:.8rem;color:#7c3aed;font-weight:500;">
-                                <i class="bi bi-lightning-fill me-1"></i>Auto-Allocated — No Application Needed
+                                <i class="bi bi-lightning-fill me-1"></i>No Application Required
                             </div>
                         @endif
                     </div>

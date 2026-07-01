@@ -57,7 +57,7 @@
                             @if($scholarship->application_required)
                                 <span class="badge" style="background:#dbeafe;color:#1e40af;">Yes — Students Apply</span>
                             @else
-                                <span class="badge" style="background:#ede9fe;color:#5b21b6;">No — Auto Allocated</span>
+                                <span class="badge" style="background:#ede9fe;color:#5b21b6;">No — No Application Required</span>
                             @endif
                         </div>
                     </div>

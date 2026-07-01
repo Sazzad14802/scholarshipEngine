@@ -29,7 +29,7 @@
             <select name="application_required" class="form-select form-select-sm" style="min-width:140px;">
                 <option value="">Both</option>
                 <option value="1" {{ request('application_required')==='1' ? 'selected' : '' }}>Yes</option>
-                <option value="0" {{ request('application_required')==='0' ? 'selected' : '' }}>No (Auto)</option>
+                <option value="0" {{ request('application_required')==='0' ? 'selected' : '' }}>No (No App)</option>
             </select>
         </div>
         <div class="d-flex gap-2">
@@ -56,10 +56,10 @@
                 <tr>
                     <th>Title</th>
                     <th>Department</th>
-                    <th>Recipients</th>
-                    <th>App. Required</th>
-                    <th>Applications</th>
-                    <th>Actions</th>
+                    <th style="text-align:center;">Recipients</th>
+                    <th style="text-align:center;">App. Required</th>
+                    <th style="text-align:center;">Applications</th>
+                    <th style="text-align:center;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,14 +72,14 @@
                             @if($s->application_required)
                                 <span class="badge" style="background:#dbeafe;color:#1e40af;font-size:.72rem;">Yes</span>
                             @else
-                                <span class="badge" style="background:#ede9fe;color:#5b21b6;font-size:.72rem;">Auto</span>
+                                <span class="badge" style="background:#ede9fe;color:#5b21b6;font-size:.72rem;">No App</span>
                             @endif
                         </td>
                         <td style="text-align:center;">
                             <span class="badge bg-secondary">{{ $s->total_applications }}</span>
                         </td>
-                        <td>
-                            <div class="d-flex gap-1">
+                        <td style="text-align:center;">
+                            <div class="d-flex gap-1 justify-content-center">
                                 <a href="{{ route('admin.scholarships.show', $s->scholarship_id) }}"
                                    class="btn btn-outline-primary btn-sm" title="View">
                                     <i class="bi bi-eye"></i>
