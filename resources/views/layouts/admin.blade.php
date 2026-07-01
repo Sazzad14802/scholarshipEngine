@@ -75,18 +75,6 @@
            class="nav-link {{ request()->routeIs('admin.scholarships*') ? 'active' : '' }}">
             <i class="bi bi-award"></i>Scholarships
         </a>
-        <a href="{{ route('admin.applications.index') }}"
-           class="nav-link {{ request()->routeIs('admin.applications*') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-text"></i>Applications
-        </a>
-        <a href="{{ route('admin.allocations.index') }}"
-           class="nav-link {{ request()->routeIs('admin.allocations*') ? 'active' : '' }}">
-            <i class="bi bi-check2-circle"></i>Allocations
-        </a>
-        <a href="{{ route('admin.reports.index') }}"
-           class="nav-link {{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
-            <i class="bi bi-bar-chart-line"></i>Reports
-        </a>
     </nav>
     <div class="mt-auto p-3 border-top border-secondary">
         <div class="small text-muted mb-1">{{ Auth::user()->name }}</div>

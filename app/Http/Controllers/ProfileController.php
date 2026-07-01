@@ -1,60 +1,46 @@
 <?php
+// File: app/Http/Controllers/ProfileController.php
+//
+// Student profile: view and edit own STUDENT record.
+// Editable fields: cgpa, family_income, semester
+// Read-only: name (USERS.name), username (roll number), gender, department
+//
+// UPDATE uses raw DB::statement() — no Eloquent save().
+// Oracle note: DB::select() returns lowercase column names via PDO OCI8.
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    // ── SHOW ──────────────────────────────────────────────────────────
+    public function show()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
+        $user    = Auth::user();
+        $profile = DB::select("
+            SELECT
+                u.name,
+                u.username       AS roll_number,
+                d.name           AS department_name,
+                s.gender,
+                s.cgpa,
+                s.family_income,
+                s.semester,
+                s.student_id
+            FROM   STUDENT s
+            JOIN   USERS      u ON u.user_id       = s.user_id
+            JOIN   DEPARTMENT d ON d.department_id = s.department_id
+            WHERE  s.user_id = ?
+        ", [$user->user_id]);
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if (empty($profile)) {
+            abort(403, 'Student record not found.');
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        $profile = $profile[0];
+        return view('student.profile.show', compact('profile'));
     }
 }

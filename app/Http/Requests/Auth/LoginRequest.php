@@ -29,7 +29,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate using username + password (plain text).
+     * Attempt to authenticate using raw SQL with username + password.
      *
      * @throws ValidationException
      */
@@ -37,13 +37,23 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) {
+        $userRecord = \Illuminate\Support\Facades\DB::selectOne(
+            'SELECT * FROM USERS WHERE username = ? AND password = ?',
+            [$this->input('username'), $this->input('password')]
+        );
+
+        if (! $userRecord) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'username' => trans('auth.failed'),
             ]);
         }
+
+        $user = new \App\Models\User((array) $userRecord);
+        $user->user_id = $userRecord->user_id;
+
+        Auth::login($user, $this->boolean('remember'));
 
         RateLimiter::clear($this->throttleKey());
     }

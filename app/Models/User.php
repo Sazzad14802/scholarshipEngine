@@ -16,18 +16,18 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'name',
-        'password_hash',
+        'password',
         'role',
     ];
 
-    protected $hidden = ['password_hash'];
+    protected $hidden = ['password'];
 
     // ── Auth mappings ──────────────────────────────────────────
 
     /** Map Laravel's expected 'password' to our column name. */
     public function getAuthPassword(): string
     {
-        return $this->password_hash;
+        return $this->password;
     }
 
     /** Disable remember_token — column does not exist in our table. */
@@ -48,15 +48,4 @@ class User extends Authenticatable
         return $this->role === 'STUDENT';
     }
 
-    // ── Relationships ──────────────────────────────────────────
-
-    public function student()
-    {
-        return $this->hasOne(Student::class, 'user_id', 'user_id');
-    }
-
-    public function scholarships()
-    {
-        return $this->hasMany(ScholarshipProgram::class, 'created_by', 'user_id');
-    }
 }

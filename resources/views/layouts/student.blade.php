@@ -70,13 +70,10 @@
            class="nav-link {{ request()->routeIs('student.scholarships*') ? 'active' : '' }}">
             <i class="bi bi-search"></i>Browse Scholarships
         </a>
-        <a href="{{ route('student.applications.index') }}"
-           class="nav-link {{ request()->routeIs('student.applications*') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-text"></i>My Applications
-        </a>
-        <a href="{{ route('student.allocations.index') }}"
-           class="nav-link {{ request()->routeIs('student.allocations*') ? 'active' : '' }}">
-            <i class="bi bi-check2-circle"></i>My Allocations
+
+        <a href="{{ route('student.profile.show') }}"
+           class="nav-link {{ request()->routeIs('student.profile*') ? 'active' : '' }}">
+            <i class="bi bi-person-circle"></i>My Profile
         </a>
     </nav>
     <div class="mt-auto p-3 border-top border-secondary">
@@ -101,6 +98,12 @@
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif

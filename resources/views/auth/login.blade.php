@@ -21,13 +21,7 @@
     </div>
     <div class="card-body p-4">
 
-        @if ($errors->any())
-            <div class="alert alert-danger py-2">
-                @foreach ($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-            </div>
-        @endif
+
 
         <form method="POST" action="{{ route('login') }}">
             @csrf

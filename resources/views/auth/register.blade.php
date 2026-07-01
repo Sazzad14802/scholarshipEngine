@@ -22,13 +22,7 @@
     </div>
     <div class="card-body p-4">
 
-        @if ($errors->any())
-            <div class="alert alert-danger py-2">
-                @foreach ($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-            </div>
-        @endif
+
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
@@ -87,7 +81,6 @@
                         <option value="">— Select —</option>
                         <option value="male"   {{ old('gender')==='male'?'selected':'' }}>Male</option>
                         <option value="female" {{ old('gender')==='female'?'selected':'' }}>Female</option>
-                        <option value="other"  {{ old('gender')==='other'?'selected':'' }}>Other</option>
                     </select>
                     @error('gender')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>

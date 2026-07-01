@@ -147,26 +147,12 @@ class StudentManagementController extends Controller
                 s.gender,
                 s.cgpa,
                 s.family_income,
-                s.semester,
-                CASE
-                    WHEN MAX(CASE WHEN ap.status = 'APPROVED'
-                                   AND al.allocation_id IS NOT NULL
-                             THEN 1 ELSE 0 END) = 1 THEN 'Awarded'
-                    WHEN MAX(CASE WHEN ap.status = 'PENDING' THEN 1 ELSE 0 END) = 1 THEN 'Pending'
-                    WHEN MAX(CASE WHEN ap.status = 'REJECTED' THEN 1 ELSE 0 END) = 1 THEN 'Rejected'
-                    ELSE 'None'
-                END                                 AS scholarship_status
+                s.semester
             FROM
                 STUDENT s
                 JOIN USERS      u  ON u.user_id       = s.user_id
                 JOIN DEPARTMENT d  ON d.department_id = s.department_id
-                LEFT JOIN APPLICATION  ap ON ap.student_id     = s.student_id
-                LEFT JOIN ALLOCATION   al ON al.application_id = ap.application_id
             {$whereClause}
-            GROUP BY
-                s.student_id, s.roll_number, u.name, d.name, d.dept_code,
-                SUBSTR(s.roll_number, 1, 2), s.gender, s.cgpa,
-                s.family_income, s.semester
             ORDER BY
                 {$sortCol} {$direction}
             OFFSET ? ROWS FETCH NEXT ? ROWS ONLY

@@ -172,7 +172,7 @@
 <div class="card filter-card mb-4">
     <div class="card-header">
         <i class="bi bi-sliders me-2"></i>Filter &amp; Search Students
-        @if(array_filter(array_diff_key($filters, ['minIncome'=>0,'maxIncome'=>0,'minCgpa'=>0,'maxCgpa'=>0])))
+        @if(array_filter(array_diff_key($filters, ['minIncome'=>0,'maxIncome'=>0,'minCgpa'=>0,'maxCgpa'=>0,'perPage'=>0,'per_page'=>0,'direction'=>0,'sort'=>0])))
             <span class="badge bg-warning text-dark ms-2">Filters active</span>
         @endif
     </div>
@@ -368,7 +368,6 @@
                         </a>
                     </th>
                     <th>Semester</th>
-                    <th>Scholarship</th>
                 </tr>
             </thead>
             <tbody>
@@ -376,18 +375,6 @@
                     @php
                         $rowNum = ($paginator->currentPage() - 1) * $paginator->perPage() + $i + 1;
                         $cgpaClass = $s->cgpa >= 3.5 ? 'cgpa-high' : ($s->cgpa >= 3.0 ? 'cgpa-mid' : 'cgpa-low');
-                        $statusClass = match($s->scholarship_status) {
-                            'Awarded'  => 'badge-awarded',
-                            'Pending'  => 'badge-pending',
-                            'Rejected' => 'badge-rejected',
-                            default    => 'badge-none',
-                        };
-                        $statusIcon = match($s->scholarship_status) {
-                            'Awarded'  => 'bi-check-circle-fill',
-                            'Pending'  => 'bi-clock-fill',
-                            'Rejected' => 'bi-x-circle-fill',
-                            default    => 'bi-dash-circle',
-                        };
                         $deptAbbr = match($s->dept_code) {
                             '03' => 'EEE',
                             '05' => 'ME',
@@ -430,11 +417,6 @@
                         <td style="text-align:center;">
                             <span class="badge rounded-pill" style="background:#f0f2f5;color:#495057;font-weight:600;font-size:.75rem;">
                                 {{ $s->semester }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge rounded-pill {{ $statusClass }}" style="padding:4px 10px;">
-                                <i class="bi {{ $statusIcon }} me-1"></i>{{ $s->scholarship_status }}
                             </span>
                         </td>
                     </tr>

@@ -10,8 +10,8 @@ while ($row = oci_fetch_assoc($stmt)) {
     echo "  [{$row['USER_ID']}] {$row['NAME']} | {$row['EMAIL']} | {$row['ROLE']}\n";
 }
 
-// Test password_hash retrieval
-$stmt2 = oci_parse($conn, "SELECT password_hash FROM USERS WHERE email = 'admin@uni.edu'");
+// Test password retrieval
+$stmt2 = oci_parse($conn, "SELECT password FROM USERS WHERE email = 'admin@uni.edu'");
 oci_execute($stmt2);
 $r = oci_fetch_assoc($stmt2);
 if ($r) {

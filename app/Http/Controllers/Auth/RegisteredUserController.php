@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Department;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -19,18 +18,10 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
-    /**
-     * Handle registration.
-     *
-     * Admin  → username (any string) + name + password
-     * Student → roll_number (BBDDRRR) + name + password + gender + cgpa + family_income
-     *           Department + batch are auto-derived from roll number.
-     */
     public function store(Request $request): RedirectResponse
     {
         $role = $request->input('role', 'STUDENT');
 
-        // ── Base validation ────────────────────────────────────
         $rules = [
             'role'     => 'required|in:ADMIN,STUDENT',
             'name'     => 'required|string|max:150',
@@ -39,7 +30,7 @@ class RegisteredUserController extends Controller
 
         if ($role === 'STUDENT') {
             $rules['roll_number']   = ['required', 'string', 'regex:/^\d{7}$/', 'unique:USERS,username'];
-            $rules['gender']        = 'required|in:male,female,other';
+            $rules['gender']        = 'required|in:male,female';
             $rules['cgpa']          = 'required|numeric|min:0|max:4';
             $rules['family_income'] = 'required|numeric|min:0';
         } else {
@@ -48,48 +39,44 @@ class RegisteredUserController extends Controller
 
         $validated = $request->validate($rules);
 
-        // ── Determine username and department ──────────────────
         if ($role === 'STUDENT') {
             $rollNumber = $validated['roll_number'];
             $username   = $rollNumber;
+            $deptCode   = substr($rollNumber, 2, 2);
 
-            // Parse department code from roll number (chars 3-4, 0-indexed 2-3)
-            $deptCode = substr($rollNumber, 2, 2);
-
-            $department = Department::where('dept_code', $deptCode)->first();
+            $department = DB::selectOne('SELECT department_id FROM DEPARTMENT WHERE dept_code = ?', [$deptCode]);
             if (! $department) {
                 return back()->withErrors(['roll_number' => "No department found for code '{$deptCode}' in your roll number."])->withInput();
             }
 
-            // Derive semester from batch year
             $batchYear = 2000 + (int) substr($rollNumber, 0, 2);
             $semester  = max(1, min(12, (date('Y') - $batchYear) * 2 - 1));
         } else {
             $username = $validated['username'];
         }
 
-        // ── INSERT into USERS ──────────────────────────────────
         DB::statement(
-            "INSERT INTO USERS (user_id, username, name, password_hash, role)
-             VALUES (user_seq.NEXTVAL, :username, :name, :password_hash, :role)",
+            "INSERT INTO USERS (username, name, password, role)
+             VALUES (:username, :name, :password, :role)",
             [
                 'username'      => $username,
                 'name'          => $validated['name'],
-                'password_hash' => $validated['password'],   // plain text
+                'password'      => $validated['password'],
                 'role'          => $role,
             ]
         );
 
-        $user = User::where('username', $username)->firstOrFail();
+        // Fetch the inserted user since username is unique
+        $userRecord = DB::selectOne('SELECT * FROM USERS WHERE username = ?', [$username]);
+        $user = new User((array) $userRecord);
+        $user->user_id = $userRecord->user_id;
 
-        // ── INSERT into STUDENT (if student) ──────────────────
         if ($role === 'STUDENT') {
             DB::statement(
                 "INSERT INTO STUDENT
-                    (student_id, user_id, department_id, roll_number, gender, cgpa, family_income, semester)
+                    (user_id, department_id, roll_number, gender, cgpa, family_income, semester)
                  VALUES
-                    (student_seq.NEXTVAL, :user_id, :department_id, :roll_number,
-                     :gender, :cgpa, :family_income, :semester)",
+                    (:user_id, :department_id, :roll_number, :gender, :cgpa, :family_income, :semester)",
                 [
                     'user_id'       => $user->user_id,
                     'department_id' => $department->department_id,
